@@ -2,10 +2,25 @@ import './App.css';
 import { useState } from 'react'
 
 function App() {
+  //declaring states
   const [input_1, setInput_1] = useState("");
   const [input_2, setInput_2] = useState("");
   const [result, setResult] = useState("");
-
+  
+  //function for generating result
+  const onSubmit = event => {
+    event.preventDefault();
+    return fetch(`http://localhost:8000/textedit`,{
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({input_1: input_1, input_2: input_2})
+    }).then(response => response.json()).then(data => {
+      setResult(data)
+    })
+    .catch(err => console.log(err))
+  }
   return (
     <div className='container'>
     <form className='add-form'>
@@ -27,10 +42,13 @@ function App() {
           onChange={(e) => setInput_2(e.target.value)}
         />
       </div>
-      <button className='btn'>
+      <button className='btn' onClick={onSubmit}>
         Submit
       </button>
     </form>
+    <div className='outputbox'>
+      <div>{result}</div>
+    </div>
     </div>
   )
 }
