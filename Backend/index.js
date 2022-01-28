@@ -12,15 +12,18 @@ app.get('/', (req, res) => {
 })
 
 app.post('/textedit', (req, res) => {
-    input_1, input_2 = req.body;
-
+    const {input_1, input_2} = req.body;
+    replaceString(input_1, match, input_2)
+    .then(response=>{
+        res.status(200).json(response)
+    }).catch(err=> console.log(err))
 })
 
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`)
 })
 
-const replaceString = (str, match) => {
+const replaceString = (str, match, name) => {
     return new Promise((resolve, reject) => {
         match.map((data, index) => {
             console.log(index)
@@ -29,7 +32,7 @@ const replaceString = (str, match) => {
             console.log("DATA1---",data)
             data = data.split('|')
             console.log("DATA2---",data)
-            str = str.replace(/@[a-z]+/gm, "Tanay")
+            str = str.replace(/@[a-z]+/gm, name)
             console.log("strrr",str)
             const random = (Math.random() * (data.length - 1)).toFixed()
             str = str.replace(/{([^}]+)}/m, data[random])
